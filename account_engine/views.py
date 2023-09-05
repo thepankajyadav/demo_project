@@ -8,14 +8,6 @@ from .models import User
 from .serializers import UserSerializer
 from .renderers import UserRenderer
 
-# class CreateUserView(generics.CreateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-
-
-
-
-
 
 
 # Generate Token Manually
@@ -32,6 +24,6 @@ class CreateUserView(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        serialized_user = UserSerializer(user).data 
         token = get_tokens_for_user(user)
-        # return Response({'msg':'Registration Successful'}, status=status.HTTP_201_CREATED)
-        return Response({'token':token, 'msg':'User created'}, status=status.HTTP_201_CREATED)
+        return Response({'token':token, 'user': serialized_user, 'msg':'User created'}, status=status.HTTP_201_CREATED)
